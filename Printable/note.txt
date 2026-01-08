@@ -1,0 +1,94 @@
+struct exit_function_list **listp = __exit_funcs
+struct exit_function_list *listp = initial
+struct exit_function_list *cur = *listp = initial
+const struct exit_function *const f = &cur->fns[--cur->idx] = &cur->fns[0] = initial+16
+f->flavor = 4 = ef_cxa
+cxafct = f->func.cxa.fn = *(initial+24) = 0x24bed231fcfc3e6
+
+cxafct (f->func.cxa.arg, status);
+
+
+
+0x7f0223010c13    call   qword ptr [r12 + rdx*8]     <__do_global_dtors_aux>
+
+Truy vet r12:
+0x7f0223010be9    mov    r12, qword ptr [rax + 8]         R12, [0x3fe5e8] => 0x600db8 (__do_global_dtors_aux_fini_array_entry) —▸ 0x4007f0 (__do_global_dtors_aux)
+0x7f0223010bf4    add    r12, qword ptr [rbx]             R12 => 0x600db8 (__do_global_dtors_aux_fini_array_entry) (0x600db8 + 0x0)
+
+Truy vet rbx:
+0x7f0223010bb0    mov    rbx, qword ptr [r14 + r15*8]     RBX, [0x7ffff46d9790] => 0x7f0223227168 ◂— 0
+
+Truy vet r14:
+0x7f0223010b9f    mov    r14, qword ptr [rbp - 0x58]      R14, [0x7ffff46d97f8] => 0x7ffff46d9790 —▸ 0x7f0223227168 ◂— 0
+
+
+
+
+pwndbg> tel
+00:0000│ rdi rsi rsp 0x7ffdf509fb30 ◂— '%24$p|%47$p|'
+01:0008│-088         0x7ffdf509fb38 ◂— 0x7c702437 /* '7$p|' */
+02:0010│-080         0x7ffdf509fb40 ◂— 0
+... ↓                5 skipped
+pwndbg> 
+08:0040│-050 0x7ffdf509fb70 ◂— 0
+... ↓     7 skipped
+pwndbg> 
+10:0080│-010 0x7ffdf509fbb0 ◂— 0
+11:0088│-008 0x7ffdf509fbb8 ◂— 0xb39985e1b1bd3200
+12:0090│ rbp 0x7ffdf509fbc0 —▸ 0x7ffdf509fc90 —▸ 0x78e97b5c35f8 (__exit_funcs) —▸ 0x78e97b5c4c40 (initial) ◂— 0
+13:0098│+008 0x7ffdf509fbc8 —▸ 0x78e97b610c17 ◂— test r13d, r13d
+14:00a0│ r14 0x7ffdf509fbd0 —▸ 0x78e97b827168 ◂— 0x298
+15:00a8│+018 0x7ffdf509fbd8 —▸ 0x78e97b827700 —▸ 0x78e97b908000 ◂— jg 0x78e97b908047
+16:00b0│+020 0x7ffdf509fbe0 —▸ 0x78e97b903510 —▸ 0x78e97b200000 ◂— jg 0x78e97b200047
+17:00b8│+028 0x7ffdf509fbe8 —▸ 0x78e97b8269d8 (_rtld_global+2456) —▸ 0x78e97b600000 ◂— jg 0x78e97b600047
+pwndbg> 
+18:00c0│+030 0x7ffdf509fbf0 —▸ 0x7ffdf509fd70 —▸ 0x400960 (__libc_csu_init) ◂— push r15
+19:00c8│+038 0x7ffdf509fbf8 —▸ 0x78e97b610964 ◂— mov ecx, dword ptr [r12]
+1a:00d0│+040 0x7ffdf509fc00 —▸ 0x7ffdf509fbd0 —▸ 0x78e97b827168 ◂— 0x298
+1b:00d8│+048 0x7ffdf509fc08 ◂— 0x3000000010
+1c:00e0│+050 0x7ffdf509fc10 —▸ 0x7ffdf509fce0 ◂— 0x6824353125633825 ('%8c%15$h')
+1d:00e8│+058 0x7ffdf509fc18 —▸ 0x7ffdf509fc20 ◂— 0
+1e:00f0│+060 0x7ffdf509fc20 ◂— 0
+1f:00f8│+068 0x7ffdf509fc28 —▸ 0x7ffdf509fc00 —▸ 0x7ffdf509fbd0 —▸ 0x78e97b827168 ◂— 0x298
+pwndbg> 
+20:0100│+070 0x7ffdf509fc30 ◂— 0x400000080
+21:0108│+078 0x7ffdf509fc38 —▸ 0x7ffdf509fbd0 —▸ 0x78e97b827168 ◂— 0x298
+22:0110│+080 0x7ffdf509fc40 ◂— 0x400000000
+23:0118│+088 0x7ffdf509fc48 —▸ 0x78e97b826048 (_rtld_global+8) ◂— 4
+24:0120│+090 0x7ffdf509fc50 —▸ 0x7ffdf509fbc0 —▸ 0x7ffdf509fc90 —▸ 0x78e97b5c35f8 (__exit_funcs) —▸ 0x78e97b5c4c40 (initial) ◂— ...
+25:0128│+098 0x7ffdf509fc58 ◂— 0
+26:0130│+0a0 0x7ffdf509fc60 —▸ 0x78e97b827700 —▸ 0x78e97b908000 ◂— jg 0x78e97b908047
+27:0138│+0a8 0x7ffdf509fc68 ◂— 0
+pwndbg> 
+28:0140│+0b0 0x7ffdf509fc70 ◂— 1
+29:0148│+0b8 0x7ffdf509fc78 —▸ 0x78e97b5c4c40 (initial) ◂— 0
+2a:0150│+0c0 0x7ffdf509fc80 ◂— 0
+2b:0158│+0c8 0x7ffdf509fc88 ◂— 0
+2c:0160│+0d0 0x7ffdf509fc90 —▸ 0x78e97b5c35f8 (__exit_funcs) —▸ 0x78e97b5c4c40 (initial) ◂— 0
+2d:0168│+0d8 0x7ffdf509fc98 —▸ 0x78e97b239ff8 (__run_exit_handlers+232) ◂— jmp __run_exit_handlers+32
+2e:0170│+0e0 0x7ffdf509fca0 ◂— 0x6562b026
+2f:0178│+0e8 0x7ffdf509fca8 ◂— 0
+
+
+# 0x721c1ee2747c
+# 0x721c1ee27278
+
+
+  0x7b5c01010b9f    mov    r14, qword ptr [rbp - 0x58]      R14, [0x7ffd023aaa68] => 0x7ffd023aaa00 —▸ 0x7b5c01227168 ◂— 0x298
+   0x7b5c01010ba3    xor    r15d, r15d                       R15D => 0
+   0x7b5c01010ba6    mov    qword ptr [rbp - 0x48], r12      [0x7ffd023aaa78] <= 0x7b5c01226048 (_rtld_global+8) ◂— 4
+   0x7b5c01010baa    nop    word ptr [rax + rax]
+   0x7b5c01010bb0    mov    rbx, qword ptr [r14 + r15*8]     RBX, [0x7ffd023aaa00] => 0x7b5c01227168 ◂— 0x298
+ ► 0x7b5c01010bb4    movzx  eax, byte ptr [rbx + 0x314]      EAX, [0x7b5c0122747c] => 0x1c
+   0x7b5c01010bbb    test   al, 8                            0x1c & 0x8     EFLAGS => 0x202 [ cf pf af zf sf IF df of ac ]
+   0x7b5c01010bbd  ✘ je     0x7b5c01010c4a              <0x7b5c01010c4a>
+
+
+
+
+
+
+
+
+
+
