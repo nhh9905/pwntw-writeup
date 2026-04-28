@@ -1,0 +1,128 @@
+| Element | Hex       | ASM dịch lại (x86 32-bit)                             |
+| ------- | --------- | ----------------------------------------------------- |
+| H       | 0x48      | dec eax                                               |
+| He      | 0x48 0x65 | dec eax \| gs: prefix (segment override)              |
+| Li      | 0x4c 0x69 | dec esp \| imul (cần byte tiếp theo, chưa đủ operand) |
+| Be      | 0x42 0x65 | inc edx \| gs: prefix                                 |
+| B       | 0x42      | inc edx                                               |
+| C       | 0x43      | inc ebx                                               |
+| N       | 0x4e      | dec esi                                               |
+| O       | 0x4f      | dec edi                                               |
+| F       | 0x46      | inc esi                                               |
+| Ne      | 0x4e 0x65 | dec esi \| gs: prefix                                 |
+| Na      | 0x4e 0x61 | dec esi \| popa (0x61)                                |
+| Mg      | 0x4d 0x67 | dec ebp \| addr-size prefix (0x67)                    |
+| Al      | 0x41 0x6c | inc ecx \| insb (0x6c)                                |
+| Si      | 0x53 0x69 | push ebx \| imul (cần thêm operand)                   |
+| P       | 0x50      | push eax                                              |
+| S       | 0x53      | push ebx                                              |
+| Cl      | 0x43 0x6c | inc ebx \| insb                                       |
+| Ar      | 0x41 0x72 | inc ecx \| jb rel8 (jump if below)                    |
+| K       | 0x4b      | dec ebx                                               |
+| Ca      | 0x43 0x61 | inc ebx \| popa                                       |
+| Sc      | 0x53 0x63 | push ebx \| arpl (adjust RPL, protected mode)         |
+| Ti      | 0x54 0x69 | push esp \| imul (thiếu operand)                      |
+| V       | 0x56      | push esi                                              |
+| Cr      | 0x43 0x72 | inc ebx \| jb rel8                                    |
+| Mn      | 0x4d 0x6e | dec ebp \| outsb (output string byte to port DX)      |
+| Fe      | 0x46 0x65 | inc esi \| gs: prefix                                 |
+| Co      | 0x43 0x6f | inc ebx \| outsd (output string dword to port DX)     |
+| Ni      | 0x4e 0x69 | dec esi \| imul (thiếu operand)                       |
+| Cu      | 0x43 0x75 | inc ebx \| jne rel8 (jump if not equal)               |
+| Zn      | 0x5a 0x6e | pop edx \| outsb                                      |
+| Ga      | 0x47 0x61 | inc edi \| popa                                       |
+| Ge      | 0x47 0x65 | inc edi \| gs: prefix                                 |
+| As      | 0x41 0x73 | inc ecx \| jae rel8 (jump if above or equal)          |
+| Se      | 0x53 0x65 | push ebx \| gs: prefix                                |
+| Br      | 0x42 0x72 | inc edx \| jb rel8                                    |
+| Kr      | 0x4b 0x72 | dec ebx \| jb rel8                                    |
+| Rb      | 0x52 0x62 | push edx \| bound (check array index against bound)   |
+| Sr      | 0x53 0x72 | push ebx \| jb rel8                                   |
+| Y       | 0x59      | pop ecx                                               |
+| Zr      | 0x5a 0x72 | pop edx \| jb rel8                                    |
+| Nb      | 0x4e 0x62 | dec esi \| bound                                      |
+| Mo      | 0x4d 0x6f | dec ebp \| outsd                                      |
+| Tc      | 0x54 0x63 | push esp \| arpl                                      |
+| Ru      | 0x52 0x75 | push edx \| jne rel8                                  |
+| Rh      | 0x52 0x68 | push edx \| imul (thiếu operand)                      |
+| Pd      | 0x50 0x64 | push eax \| fs: prefix                                |
+| Ag      | 0x41 0x67 | inc ecx \| addr-size prefix                           |
+| Cd      | 0x43 0x64 | inc ebx \| fs: prefix                                 |
+| In      | 0x49 0x6e | dec ecx \| outsb                                      |
+| Sn      | 0x53 0x6e | push ebx \| outsb                                     |
+| Sb      | 0x53 0x62 | push ebx \| bound                                     |
+| Te      | 0x54 0x65 | push esp \| gs: prefix                                |
+| I       | 0x49      | dec ecx                                               |
+| Xe      | 0x58 0x65 | pop eax \| gs: prefix                                 |
+| Cs      | 0x43 0x73 | inc ebx \| jae rel8                                   |
+| Ba      | 0x42 0x61 | inc edx \| popa                                       |
+| La      | 0x4c 0x61 | dec esp \| popa                                       |
+| Ce      | 0x43 0x65 | inc ebx \| gs: prefix                                 |
+| Pr      | 0x50 0x72 | push eax \| jb rel8                                   |
+| Nd      | 0x4e 0x64 | dec esi \| fs: prefix                                 |
+| Pm      | 0x50 0x6d | push eax \| imul rel8                                 |
+| Sm      | 0x53 0x6d | push ebx \| imul rel8                                 |
+| Eu      | 0x45 0x75 | inc ebp \| jne rel8                                   |
+| Gd      | 0x47 0x64 | inc edi \| fs: prefix                                 |
+| Tb      | 0x54 0x62 | push esp \| bound                                     |
+| Dy      | 0x44 0x79 | inc esp \| jns rel8                                   |
+| Ho      | 0x48 0x6f | dec eax \| outsd                                      |
+| Er      | 0x45 0x72 | inc ebp \| jb rel8                                    |
+| Tm      | 0x54 0x6d | push esp \| imul rel8                                 |
+| Yb      | 0x59 0x62 | pop ecx \| bound                                      |
+| Lu      | 0x4c 0x75 | dec esp \| jne rel8                                   |
+| Hf      | 0x48 0x66 | dec eax \| fs: prefix                                 |
+| Ta      | 0x54 0x61 | push esp \| popa                                      |
+| W       | 0x57      | push edi                                              |
+| Re      | 0x52 0x65 | push edx \| gs: prefix                                |
+| Os      | 0x4f 0x73 | dec edi \| jae rel8                                   |
+| Ir      | 0x49 0x72 | dec ecx \| jb rel8                                    |
+| Pt      | 0x50 0x74 | push eax \| je rel8                                   |
+| Au      | 0x41 0x75 | inc ecx \| jne rel8                                   |
+| Hg      | 0x48 0x67 | dec eax \| addr-size prefix                           |
+| Tl      | 0x54 0x6c | push esp \| insb                                      |
+| Pb      | 0x50 0x62 | push eax \| bound                                     |
+| Bi      | 0x42 0x69 | inc edx \| imul rel8                                  |
+| Po      | 0x50 0x6f | push eax \| outsd                                     |
+| At      | 0x41 0x74 | inc ecx \| je rel8                                    |
+| Rn      | 0x52 0x6e | push edx \| outsb                                     |
+| Fr      | 0x46 0x72 | inc esi \| jb rel8                                    |
+| Ra      | 0x52 0x61 | push edx \| popa                                      |
+| Ac      | 0x41 0x63 | inc ecx \| arpl                                       |
+| Th      | 0x54 0x68 | push esp \| imul rel8                                 |
+| Pa      | 0x50 0x61 | push eax \| popa                                      |
+| U       | 0x55      | push ebp                                              |
+| Np      | 0x4e 0x70 | dec esi \| jo rel8                                    |
+| Pu      | 0x50 0x75 | push eax \| jne rel8                                  |
+| Am      | 0x41 0x6d | inc ecx \| imul rel8                                  |
+| Cm      | 0x43 0x6d | inc ebx \| imul rel8                                  |
+| Bk      | 0x42 0x6b | inc edx \| imul rel8                                  |
+| Cf      | 0x43 0x66 | inc ebx \| fs: prefix                                 |
+| Es      | 0x45 0x73 | inc ebp \| jae rel8                                   |
+| Fm      | 0x46 0x6d | inc esi \| imul rel8                                  |
+| Md      | 0x4d 0x64 | dec ebp \| fs: prefix                                 |
+| No      | 0x4e 0x6f | dec esi \| outsd                                      |
+| Lr      | 0x4c 0x72 | dec esp \| jb rel8                                    |
+| Rf      | 0x52 0x66 | push edx \| fs: prefix                                |
+| Db      | 0x44 0x62 | inc esp \| bound                                      |
+| Sg      | 0x53 0x67 | push ebx \| addr-size prefix                          |
+| Bh      | 0x42 0x68 | inc edx \| imul rel8                                  |
+| Hs      | 0x48 0x73 | dec eax \| jae rel8                                   |
+| Mt      | 0x4d 0x74 | dec ebp \| je rel8                                    |
+| Ds      | 0x44 0x73 | inc esp \| jae rel8                                   |
+| Rg      | 0x52 0x67 | push edx \| addr-size prefix                          |
+| Cn      | 0x43 0x6e | inc ebx \| outsb                                      |
+| Fl      | 0x46 0x6c | inc esi \| insb                                       |
+| Lv      | 0x4c 0x76 | dec esp \| jbe rel8                                   |
+
+
+31 41 6c                xor    DWORD PTR [ecx+0x6c],eax
+32 41 6c                xor    al,BYTE PTR [ecx+0x6c]
+38 41 6c                cmp    BYTE PTR [ecx+0x6c],al
+39 41 6c                cmp    DWORD PTR [ecx+0x6c],eax
+
+
+EAX = 3
+EBX = 0
+ECX = addr: ok
+EDX
